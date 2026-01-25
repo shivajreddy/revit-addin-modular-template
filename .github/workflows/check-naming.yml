@@ -1,0 +1,46 @@
+name: Check Naming
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-pilot-references:
+    name: Check for 'pilot' references
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for 'pilot' or 'Pilot' in files
+        run: |
+          echo "Searching for 'pilot' or 'Pilot' references..."
+
+          # Search for pilot/Pilot in all text files, excluding .git and bin/obj folders
+          MATCHES=$(grep -ri --include="*.cs" --include="*.csproj" --include="*.slnx" --include="*.addin" --include="*.json" --include="*.xml" --include="*.md" -E "[Pp]ilot" . 2>/dev/null || true)
+
+          if [ -n "$MATCHES" ]; then
+            echo "::error::Found 'pilot' or 'Pilot' references that should be renamed:"
+            echo "$MATCHES"
+            exit 1
+          else
+            echo "No 'pilot' or 'Pilot' references found."
+          fi
+
+      - name: Check for 'pilot' in file/folder names
+        run: |
+          echo "Searching for 'pilot' in file and folder names..."
+
+          # Find files or folders with 'pilot' in the name
+          MATCHES=$(find . -name "*[Pp]ilot*" -not -path "./.git/*" 2>/dev/null || true)
+
+          if [ -n "$MATCHES" ]; then
+            echo "::error::Found files/folders with 'pilot' in the name:"
+            echo "$MATCHES"
+            exit 1
+          else
+            echo "No files/folders with 'pilot' in the name found."
+          fi
