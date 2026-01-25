@@ -79,7 +79,7 @@ Write-Host ""
 Prompt-Continue
 
 # Step 1: Get project name
-Write-Step -Number 1 -Total 6 -Text "Choose Your Project Name"
+Write-Step -Number 1 -Total 7 -Text "Choose Your Project Name"
 
 Write-Host "  Your project name should be:" -ForegroundColor White
 Write-Host "    - PascalCase (e.g., MyRevitAddin, AcmeTools)" -ForegroundColor Gray
@@ -130,7 +130,7 @@ if (Test-Path $NewProjectRoot) {
 }
 
 # Step 2: Show what will be renamed
-Write-Step -Number 2 -Total 6 -Text "Review Changes"
+Write-Step -Number 2 -Total 7 -Text "Review Changes"
 
 Write-Host "  A new project will be created at:" -ForegroundColor White
 Write-Host "    $NewProjectRoot" -ForegroundColor Cyan
@@ -163,7 +163,7 @@ if ($confirm -ne 'y' -and $confirm -ne 'Y') {
 }
 
 # Step 3: Copy template to new location
-Write-Step -Number 3 -Total 6 -Text "Copying Template"
+Write-Step -Number 3 -Total 7 -Text "Copying Template"
 
 Write-Host "  Copying template to: $NewProjectRoot" -ForegroundColor White
 Write-Host ""
@@ -196,7 +196,7 @@ Write-Host "  Template copied successfully." -ForegroundColor Green
 Prompt-Continue
 
 # Step 4: Replace content in files
-Write-Step -Number 4 -Total 6 -Text "Updating File Contents"
+Write-Step -Number 4 -Total 7 -Text "Updating File Contents"
 
 Write-Host "  Replacing '$OldName' with '$NewName' in all files..." -ForegroundColor White
 Write-Host ""
@@ -236,7 +236,7 @@ Write-Host "  $filesUpdated file(s) updated." -ForegroundColor Green
 Prompt-Continue
 
 # Step 5: Rename files and folders
-Write-Step -Number 5 -Total 6 -Text "Renaming Files and Folders"
+Write-Step -Number 5 -Total 7 -Text "Renaming Files and Folders"
 
 Write-Host "  Renaming files..." -ForegroundColor White
 $filesRenamed = 0
@@ -285,7 +285,7 @@ Write-Host "  $filesRenamed file(s) and $foldersRenamed folder(s) renamed." -For
 Prompt-Continue
 
 # Step 6: Generate new GUID
-Write-Step -Number 6 -Total 6 -Text "Generating Unique Add-in ID"
+Write-Step -Number 6 -Total 7 -Text "Generating Unique Add-in ID"
 
 $newGuid = [guid]::NewGuid().ToString()
 $addinPath = Join-Path $NewProjectRoot "addin\$NewName.addin"
@@ -302,6 +302,83 @@ if (Test-Path $addinPath) {
     Write-Host "  This GUID is stored in: addin\$NewName.addin" -ForegroundColor DarkGray
 } else {
     Write-Host "  Warning: Could not find addin file to update GUID." -ForegroundColor Yellow
+}
+
+# Step 7: Verification scan
+Write-Step -Number 7 -Total 7 -Text "Verification Scan"
+
+Write-Host "  Scanning project for naming consistency..." -ForegroundColor White
+Write-Host ""
+
+# Count files/folders with new name
+$filesWithNewName = (Get-ChildItem -Path $NewProjectRoot -Recurse -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -like "*$NewName*" }).Count
+
+$foldersWithNewName = (Get-ChildItem -Path $NewProjectRoot -Recurse -Directory -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -like "*$NewName*" }).Count
+
+# Count files containing new name in content
+$filesContainingNewName = 0
+foreach ($ext in $fileExtensions) {
+    $files = Get-ChildItem -Path $NewProjectRoot -Filter $ext -Recurse -File -ErrorAction SilentlyContinue
+    foreach ($file in $files) {
+        $content = Get-Content -Path $file.FullName -Raw -ErrorAction SilentlyContinue
+        if ($content -and $content -match $NewName) {
+            $filesContainingNewName++
+        }
+    }
+}
+
+# Check for any remaining old name references
+$remainingOldNameFiles = @()
+$remainingOldNameContent = @()
+
+# Check file/folder names
+Get-ChildItem -Path $NewProjectRoot -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -like "*$OldName*" } |
+    ForEach-Object { $remainingOldNameFiles += $_.FullName -replace [regex]::Escape($NewProjectRoot), "." }
+
+# Check file contents
+foreach ($ext in $fileExtensions) {
+    $files = Get-ChildItem -Path $NewProjectRoot -Filter $ext -Recurse -File -ErrorAction SilentlyContinue
+    foreach ($file in $files) {
+        $content = Get-Content -Path $file.FullName -Raw -ErrorAction SilentlyContinue
+        if ($content -and $content -match $OldName) {
+            $remainingOldNameContent += $file.FullName -replace [regex]::Escape($NewProjectRoot), "."
+        }
+    }
+}
+
+# Display results
+Write-Host "  New Name Statistics:" -ForegroundColor Green
+Write-Host "    Files named with '$NewName':      $filesWithNewName" -ForegroundColor Gray
+Write-Host "    Folders named with '$NewName':    $foldersWithNewName" -ForegroundColor Gray
+Write-Host "    Files containing '$NewName':      $filesContainingNewName" -ForegroundColor Gray
+Write-Host ""
+
+$oldNameIssues = $remainingOldNameFiles.Count + $remainingOldNameContent.Count
+
+if ($oldNameIssues -eq 0) {
+    Write-Host "  Old Name Check:" -ForegroundColor Green
+    Write-Host "    No references to '$OldName' found" -ForegroundColor Gray
+    Write-Host ""
+    Write-Host "  All checks passed!" -ForegroundColor Green
+} else {
+    Write-Host "  Old Name Check:" -ForegroundColor Yellow
+    if ($remainingOldNameFiles.Count -gt 0) {
+        Write-Host "    Files/folders still named with '$OldName':" -ForegroundColor Yellow
+        foreach ($item in $remainingOldNameFiles) {
+            Write-Host "      $item" -ForegroundColor DarkYellow
+        }
+    }
+    if ($remainingOldNameContent.Count -gt 0) {
+        Write-Host "    Files still containing '$OldName':" -ForegroundColor Yellow
+        foreach ($item in $remainingOldNameContent) {
+            Write-Host "      $item" -ForegroundColor DarkYellow
+        }
+    }
+    Write-Host ""
+    Write-Host "  Warning: Some references to old name remain. Manual review recommended." -ForegroundColor Yellow
 }
 
 # Complete
