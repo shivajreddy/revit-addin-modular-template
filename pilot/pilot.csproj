@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RevitVersion>2026</RevitVersion>
@@ -28,7 +28,7 @@
     <MakeDir Directories="$(RevitAddinsFolder)\Pilot" />
 
     <!-- Copy .addin manifest -->
-    <Copy SourceFiles="$(ProjectDir)..\..\addin\Pilot.addin" DestinationFolder="$(RevitAddinsFolder)" />
+    <Copy SourceFiles="$(ProjectDir)..\addin\Pilot.addin" DestinationFolder="$(RevitAddinsFolder)" />
 
     <!-- Copy all DLLs from output -->
     <Copy SourceFiles="$(TargetDir)pilot.dll" DestinationFolder="$(RevitAddinsFolder)\Pilot" />

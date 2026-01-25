@@ -1,50 +1,77 @@
 ﻿using Autodesk.Revit.UI;
 
-using Pilot.ui.Revit;
-
-namespace pilot.ui.Revit;
-
+namespace Pilot.ui.Revit;
 
 /// <summary>
-/// The Revit push button methods
+/// Factory class for creating Revit ribbon push buttons with icons.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Use this class when you need buttons with custom icons. For simple buttons
+/// without icons, you can create <see cref="PushButtonData"/> directly in
+/// <see cref="Pilot.InitAddIn"/>.
+/// </para>
+/// <para>
+/// Icons must be embedded resources in the pilot.res project under Images/Icons/.
+/// </para>
+/// </remarks>
 public class RevitPushButton
 {
-    #region public methods
-
     /// <summary>
-    /// Create the push button based on data provided in <see cref="RevitPushButtonDataModel"/>
+    /// Creates and adds a push button to a ribbon panel with full icon support.
     /// </summary>
-    /// <param name="data"></param>
-    /// <returns></returns>
+    /// <param name="data">
+    /// The button configuration including label, command, and icon file names.
+    /// See <see cref="RevitPushButtonDataModel"/> for required properties.
+    /// </param>
+    /// <returns>
+    /// The created <see cref="PushButton"/> instance, allowing further customization.
+    /// </returns>
+    /// <remarks>
+    /// The button is automatically added to the panel specified in the data model.
+    /// A GUID is used as the internal button name to ensure uniqueness.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// var data = new RevitPushButtonDataModel
+    /// {
+    ///     Label = "Hello\nWorld",
+    ///     Panel = panel,
+    ///     CommandNamespacePath = HelloWorld.GetPath(),
+    ///     Tooltip = "Shows a greeting",
+    ///     IconImageName = "hello16.ico",
+    ///     IconLargeImageName = "hello32.ico"
+    /// };
+    /// var button = RevitPushButton.Create(data);
+    /// </code>
+    /// </example>
     public static PushButton Create(RevitPushButtonDataModel data)
     {
-        // Create a name with a guid
+        // Use GUID to ensure unique internal button name
         var btnDataName = Guid.NewGuid().ToString();
 
-        // Sets the button data
-        var btnData = new PushButtonData(btnDataName, data.Label, Pilot.core.CoreAssembly.GetCoreAssemblyLocation(), data.CommandNamespacePath)
+        // Create button data with command registration
+        var btnData = new PushButtonData(
+            btnDataName,
+            data.Label,
+            Pilot.core.CoreAssembly.GetCoreAssemblyLocation(),
+            data.CommandNamespacePath)
         {
-            // 16x16 .icon image
-            Image = Pilot.res.ResourceImage.GetIcon(data.IconImageName),   
-            // 32x32 .icon image
+            // Small icon for compact display (16x16 pixels)
+            Image = Pilot.res.ResourceImage.GetIcon(data.IconImageName),
+            // Large icon for standard display (32x32 pixels)
             LargeImage = Pilot.res.ResourceImage.GetIcon(data.IconLargeImageName),
-            // 32x32 .icon image, same as above should be fine
+            // Tooltip image (typically same as large icon)
             ToolTipImage = Pilot.res.ResourceImage.GetIcon(data.IconLargeImageName),
 
             ToolTip = data.Tooltip,
-
             LongDescription = data.LongDescription,
-
-
         };
 
-        // Set the availability class here
-        //btnData.AvailabilityClassName = "Revtec.ui.Revit.CustomAvailability";
+        // Optional: Set availability class to control when button is enabled
+        // btnData.AvailabilityClassName = "Pilot.ui.Revit.CustomAvailability";
 
         return data.Panel.AddItem(btnData) as PushButton;
     }
-
-    #endregion
 }
 
