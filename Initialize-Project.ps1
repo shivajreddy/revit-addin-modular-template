@@ -79,7 +79,7 @@ Write-Host ""
 Prompt-Continue
 
 # Step 1: Get project name
-Write-Step -Number 1 -Total 7 -Text "Choose Your Project Name"
+Write-Step -Number 1 -Total 8 -Text "Choose Your Project Name"
 
 Write-Host "  Your project name should be:" -ForegroundColor White
 Write-Host "    - PascalCase (e.g., MyRevitAddin, AcmeTools)" -ForegroundColor Gray
@@ -130,7 +130,7 @@ if (Test-Path $NewProjectRoot) {
 }
 
 # Step 2: Show what will be renamed
-Write-Step -Number 2 -Total 7 -Text "Review Changes"
+Write-Step -Number 2 -Total 8 -Text "Review Changes"
 
 Write-Host "  A new project will be created at:" -ForegroundColor White
 Write-Host "    $NewProjectRoot" -ForegroundColor Cyan
@@ -156,14 +156,20 @@ Write-Host ""
 Write-Host "  A new unique GUID will be generated for your add-in." -ForegroundColor White
 
 Write-Host ""
-$confirm = Read-Host "  Proceed with these changes? (y/n)"
-if ($confirm -ne 'y' -and $confirm -ne 'Y') {
+$confirm = $null
+while ($confirm -ne 'y' -and $confirm -ne 'Y' -and $confirm -ne 'n' -and $confirm -ne 'N') {
+    $confirm = Read-Host "  Proceed with these changes? (y/n)"
+    if ([string]::IsNullOrWhiteSpace($confirm) -or ($confirm -ne 'y' -and $confirm -ne 'Y' -and $confirm -ne 'n' -and $confirm -ne 'N')) {
+        Write-Host "  Please enter 'y' or 'n'." -ForegroundColor Yellow
+    }
+}
+if ($confirm -eq 'n' -or $confirm -eq 'N') {
     Write-Host "  Cancelled." -ForegroundColor Red
     exit 0
 }
 
 # Step 3: Copy template to new location
-Write-Step -Number 3 -Total 7 -Text "Copying Template"
+Write-Step -Number 3 -Total 8 -Text "Copying Template"
 
 Write-Host "  Copying template to: $NewProjectRoot" -ForegroundColor White
 Write-Host ""
@@ -195,8 +201,38 @@ Write-Host "  Template copied successfully." -ForegroundColor Green
 
 Prompt-Continue
 
-# Step 4: Replace content in files
-Write-Step -Number 4 -Total 7 -Text "Updating File Contents"
+# Step 4: Remove template-specific files
+Write-Step -Number 4 -Total 8 -Text "Cleaning Up Template Files"
+
+Write-Host "  Removing template-specific files and folders..." -ForegroundColor White
+Write-Host ""
+
+$itemsToRemove = @(
+    ".git",
+    ".github",
+    ".gitignore",
+    "Initialize-Project.ps1",
+    "LICENSE",
+    "README.md"
+)
+
+$itemsRemoved = 0
+foreach ($item in $itemsToRemove) {
+    $itemPath = Join-Path $NewProjectRoot $item
+    if (Test-Path $itemPath) {
+        Remove-Item -Path $itemPath -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Host "    Removed: $item" -ForegroundColor DarkGray
+        $itemsRemoved++
+    }
+}
+
+Write-Host ""
+Write-Host "  $itemsRemoved item(s) removed." -ForegroundColor Green
+
+Prompt-Continue
+
+# Step 5: Replace content in files
+Write-Step -Number 5 -Total 8 -Text "Updating File Contents"
 
 Write-Host "  Replacing '$OldName' with '$NewName' in all files..." -ForegroundColor White
 Write-Host ""
@@ -235,8 +271,8 @@ Write-Host "  $filesUpdated file(s) updated." -ForegroundColor Green
 
 Prompt-Continue
 
-# Step 5: Rename files and folders
-Write-Step -Number 5 -Total 7 -Text "Renaming Files and Folders"
+# Step 6: Rename files and folders
+Write-Step -Number 6 -Total 8 -Text "Renaming Files and Folders"
 
 Write-Host "  Renaming files..." -ForegroundColor White
 $filesRenamed = 0
@@ -284,8 +320,8 @@ Write-Host "  $filesRenamed file(s) and $foldersRenamed folder(s) renamed." -For
 
 Prompt-Continue
 
-# Step 6: Generate new GUID
-Write-Step -Number 6 -Total 7 -Text "Generating Unique Add-in ID"
+# Step 7: Generate new GUID
+Write-Step -Number 7 -Total 8 -Text "Generating Unique Add-in ID"
 
 $newGuid = [guid]::NewGuid().ToString()
 $addinPath = Join-Path $NewProjectRoot "addin\$NewName.addin"
@@ -304,8 +340,8 @@ if (Test-Path $addinPath) {
     Write-Host "  Warning: Could not find addin file to update GUID." -ForegroundColor Yellow
 }
 
-# Step 7: Verification scan
-Write-Step -Number 7 -Total 7 -Text "Verification Scan"
+# Step 8: Verification scan
+Write-Step -Number 8 -Total 8 -Text "Verification Scan"
 
 Write-Host "  Scanning project for naming consistency..." -ForegroundColor White
 Write-Host ""
