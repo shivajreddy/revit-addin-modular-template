@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<AddIn Type="Application">
+		<Name>Pilot</Name>
+		<Assembly>Pilot\pilot.dll</Assembly>
+		<FullClassName>Pilot.Main</FullClassName>
+		<ClientId>a1b2c3d4-e5f6-7890-abcd-ef1234567890</ClientId>
+		<VendorId>Pilot</VendorId>
+		<VendorDescription>Pilot Revit Add-in</VendorDescription>
+	</AddIn>
+</RevitAddIns>

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="pilot.core/pilot.core.csproj" />
+  <Project Path="pilot.res/pilot.res.csproj" />
+  <Project Path="pilot.ui/pilot.ui.csproj" />
+  <Project Path="pilot/pilot.csproj" />
+</Solution>
