@@ -1,4 +1,7 @@
 <Solution>
+  <Properties>
+    <Property Name="StartupProject" Value="RevitAddInModularTemplate" />
+  </Properties>
   <Project Path="RevitAddInModularTemplate/RevitAddInModularTemplate.csproj" />
   <Project Path="RevitAddInModularTemplate.Core/RevitAddInModularTemplate.Core.csproj" />
   <Project Path="RevitAddInModularTemplate.UI/RevitAddInModularTemplate.UI.csproj" />

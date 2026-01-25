@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <RevitVersion>2026</RevitVersion>
     <RevitAddinsFolder>$(ProgramData)\Autodesk\Revit\Addins\$(RevitVersion)</RevitAddinsFolder>
+    <!-- Debug settings to launch Revit -->
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files\Autodesk\Revit 2026\Revit.exe</StartProgram>
   </PropertyGroup>
 
   <ItemGroup>
