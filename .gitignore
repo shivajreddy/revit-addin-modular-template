@@ -81,3 +81,6 @@ $RECYCLE.BIN/
 # Revit add-in specific
 *.addin
 !**/addin/*.addin
+
+# AI tools
+.claude
