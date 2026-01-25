@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="RevitAddInModularTemplate/RevitAddInModularTemplate.csproj" />
+  <Project Path="RevitAddInModularTemplate.Core/RevitAddInModularTemplate.Core.csproj" />
+  <Project Path="RevitAddInModularTemplate.UI/RevitAddInModularTemplate.UI.csproj" />
+  <Project Path="RevitAddInModularTemplate.Res/RevitAddInModularTemplate.Res.csproj" />
+</Solution>

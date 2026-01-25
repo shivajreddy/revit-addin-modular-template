@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Revit Add-in Manifest File
+
+  Location: %ProgramData%\Autodesk\Revit\Addins\{RevitVersion}\
+  The build process copies this file automatically.
+-->
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>RevitAddInModularTemplate</Name>
+    <Assembly>RevitAddInModularTemplate\RevitAddInModularTemplate.dll</Assembly>
+    <FullClassName>RevitAddInModularTemplate.Main</FullClassName>
+    <ClientId>a1b2c3d4-e5f6-7890-abcd-ef1234567890</ClientId>
+    <VendorId>RevitAddInModularTemplate</VendorId>
+    <VendorDescription>RevitAddInModularTemplate Revit Add-in</VendorDescription>
+  </AddIn>
+</RevitAddIns>

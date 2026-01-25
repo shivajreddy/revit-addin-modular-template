@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RevitVersion>2026</RevitVersion>
+    <RevitAddinsFolder>$(ProgramData)\Autodesk\Revit\Addins\$(RevitVersion)</RevitAddinsFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RevitAddInModularTemplate.Core\RevitAddInModularTemplate.Core.csproj" />
+    <ProjectReference Include="..\RevitAddInModularTemplate.Res\RevitAddInModularTemplate.Res.csproj" />
+    <ProjectReference Include="..\RevitAddInModularTemplate.UI\RevitAddInModularTemplate.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="RevitAPI">
+      <HintPath>..\lib\revit2026\RevitAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>..\lib\revit2026\RevitAPIUI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CopyToRevitAddins" AfterTargets="Build">
+    <!-- Create add-in folder in Revit Addins -->
+    <MakeDir Directories="$(RevitAddinsFolder)\RevitAddInModularTemplate" />
+
+    <!-- Copy .addin manifest -->
+    <Copy SourceFiles="$(ProjectDir)..\addin\RevitAddInModularTemplate.addin" DestinationFolder="$(RevitAddinsFolder)" />
+
+    <!-- Copy all DLLs from output -->
+    <Copy SourceFiles="$(TargetDir)RevitAddInModularTemplate.dll" DestinationFolder="$(RevitAddinsFolder)\RevitAddInModularTemplate" />
+    <Copy SourceFiles="$(TargetDir)RevitAddInModularTemplate.Core.dll" DestinationFolder="$(RevitAddinsFolder)\RevitAddInModularTemplate" />
+    <Copy SourceFiles="$(TargetDir)RevitAddInModularTemplate.UI.dll" DestinationFolder="$(RevitAddinsFolder)\RevitAddInModularTemplate" />
+    <Copy SourceFiles="$(TargetDir)RevitAddInModularTemplate.Res.dll" DestinationFolder="$(RevitAddinsFolder)\RevitAddInModularTemplate" />
+  </Target>
+
+</Project>

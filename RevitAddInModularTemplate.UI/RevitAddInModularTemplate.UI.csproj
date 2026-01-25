@@ -1,15 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <UseWPF>true</UseWPF>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\pilot.core\pilot.core.csproj" />
-    <ProjectReference Include="..\pilot.res\pilot.res.csproj" />
+    <ProjectReference Include="..\RevitAddInModularTemplate.Core\RevitAddInModularTemplate.Core.csproj" />
+    <ProjectReference Include="..\RevitAddInModularTemplate.Res\RevitAddInModularTemplate.Res.csproj" />
   </ItemGroup>
 
   <ItemGroup>
