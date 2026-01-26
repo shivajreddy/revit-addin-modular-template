@@ -12,6 +12,86 @@ A ready-to-use template for creating Autodesk Revit add-ins using a clean, modul
 3. Enter your project name in PascalCase (e.g., `MyRevitAddin`)
 4. A new project will be created in a sibling directory
 
+## Getting Started
+
+### Step 1: Prerequisites
+
+Ensure you have the following installed:
+- **Visual Studio 2022** (or later) with the ".NET desktop development" workload
+- **.NET 8.0 SDK**
+- **Revit 2026** installed at the default location (`C:\Program Files\Autodesk\Revit 2026`)
+- **PowerShell 5.1+** (included with Windows 10/11)
+
+### Step 2: Clone the Template
+
+```powershell
+cd C:\Users\YourName\source\repos
+git clone https://github.com/shivajreddy/revit-addin-modular-template.git
+cd revit-addin-modular-template
+```
+
+### Step 3: Run the Setup Script
+
+```powershell
+.\Initialize-Project.ps1
+```
+
+The script will prompt you to:
+1. Enter your project name in **PascalCase** (e.g., `AcmeTools`, `MyRevitAddin`)
+2. Review the changes that will be made
+3. Confirm to proceed
+
+The script creates your project in a sibling folder with a **kebab-case** name:
+- Input: `MyRevitAddin` → Folder: `my-revit-addin`
+
+### Step 4: Navigate to Your New Project
+
+```powershell
+cd ..\my-revit-addin
+```
+
+### Step 5: Initialize Git (Optional)
+
+The setup script removes the template's `.git` folder. Initialize a fresh repository:
+
+```powershell
+git init
+git add .
+git commit -m "Initial commit from Revit Add-In Modular Template"
+```
+
+### Step 6: Open in Visual Studio
+
+Open the solution file:
+```powershell
+start MyRevitAddin.slnx
+```
+
+Or open Visual Studio and select **File → Open → Project/Solution** and browse to your `.slnx` file.
+
+### Step 7: Build the Solution
+
+In Visual Studio, press `Ctrl+Shift+B` to build. The build automatically copies output files to Revit's Addins folder:
+- `%ProgramData%\Autodesk\Revit\Addins\2026\MyRevitAddin\` — DLLs
+- `%ProgramData%\Autodesk\Revit\Addins\2026\MyRevitAddin.addin` — manifest
+
+### Step 8: Run and Debug
+
+1. Press `F5` in Visual Studio to start debugging
+2. Revit will launch automatically
+3. Once Revit opens, find your add-in tab in the ribbon
+4. Click your button to test the command
+5. Set breakpoints in Visual Studio to debug
+
+### Step 9: Start Developing
+
+| Task | Location |
+|------|----------|
+| Add new commands | `MyRevitAddin.Core/Commands/` |
+| Configure ribbon UI | `MyRevitAddin.UI/` |
+| Add icons and images | `MyRevitAddin.Res/` |
+| Register external commands | `addin/MyRevitAddin.addin` |
+
 ## What the Setup Script Does
 
 The `Initialize-Project.ps1` script guides you through creating a new project:
