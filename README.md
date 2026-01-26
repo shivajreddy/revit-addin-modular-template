@@ -1,6 +1,6 @@
 # Revit Add-In Modular Template
 
-A template for creating Revit add-ins with a modular project structure. Clone this template and run the setup script to create your own Revit add-in project.
+A ready-to-use template for creating Autodesk Revit add-ins using a clean, modular architecture. Features separated projects for UI, business logic, and resources, plus an interactive PowerShell script that scaffolds new projects with proper namespacing and unique GUIDs.
 
 ## Quick Start
 
@@ -54,6 +54,23 @@ lib/                      # Revit API reference DLLs
 - **Easier testing** - Core logic can be tested independently
 - **Cleaner dependencies** - Each project only references what it needs
 - **Scalability** - Add new modules without cluttering the main project
+
+## Design Choices
+
+| Choice | Rationale |
+|--------|-----------|
+| **PascalCase project names** | Follows C# and .NET naming conventions for namespaces and assemblies |
+| **Kebab-case root folder** | Consistent with modern repository naming conventions and URL-friendly |
+| **Separate .Res project** | Embedded resources (icons, images) are isolated, making them reusable and keeping binaries out of logic projects |
+| **Separate .UI project** | Ribbon configuration is decoupled from commands, allowing UI changes without touching business logic |
+| **Separate .Core project** | Commands and business logic can be tested and maintained independently |
+| **Local Revit API DLLs** | Stored in `lib/` folder to avoid dependency on installed Revit location and ensure consistent builds |
+| **Post-build copy to Addins** | Automatically deploys to Revit's Addins folder for immediate testing |
+
+## Limitations
+
+- **Single Revit version** - Template targets Revit 2026 by default. Future improvement for letting the user choose the revit version
+- **No unit test project** - Add your own test project if needed (reference the .Core project)
 
 ## Requirements
 
