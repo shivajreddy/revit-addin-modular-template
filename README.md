@@ -72,10 +72,6 @@ lib/                      # Revit API reference DLLs
 - **Single Revit version** - Template targets Revit 2026 by default. Future improvement for letting the user choose the revit version
 - **No unit test project** - Add your own test project if needed (reference the .Core project)
 
-### Known Issues
-
-- **Startup project not set** - Visual Studio may not respect the `StartupProject` property in `.slnx` files when opening a new solution. After opening your project for the first time, right-click on the main project (e.g., `MyRevitAddin`) in Solution Explorer and select "Set as Startup Project"
-
 ## Roadmap
 
 Upcoming features planned for this template:
