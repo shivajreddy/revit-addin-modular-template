@@ -72,6 +72,23 @@ lib/                      # Revit API reference DLLs
 - **Single Revit version** - Template targets Revit 2026 by default. Future improvement for letting the user choose the revit version
 - **No unit test project** - Add your own test project if needed (reference the .Core project)
 
+### Known Issues
+
+- **Startup project not set** - Visual Studio may not respect the `StartupProject` property in `.slnx` files when opening a new solution. After opening your project for the first time, right-click on the main project (e.g., `MyRevitAddin`) in Solution Explorer and select "Set as Startup Project"
+
+## Roadmap
+
+Upcoming features planned for this template:
+
+- [ ] **PushButton** - Standard push button with icon
+- [ ] **SplitButton** - Dropdown button with multiple commands
+- [ ] **PulldownButton** - Menu-style button groups
+- [ ] **ToggleButton** - On/off state buttons
+- [ ] **Button images** - 16x16 and 32x32 icon setup
+- [ ] **Tooltip images** - Extended tooltips with GIF previews
+- [ ] **Help videos** - F1 help linking to video tutorials
+- [ ] **Multi-version support** - Target multiple Revit versions from single codebase
+
 ## Requirements
 
 - Visual Studio 2022 or later
