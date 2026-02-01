@@ -35,6 +35,7 @@ artifacts/
 
 # Build artifacts
 *.dll
+!lib/**/*.dll
 *.exe
 *.pdb
 *.cache
