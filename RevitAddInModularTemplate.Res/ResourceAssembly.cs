@@ -9,7 +9,8 @@ namespace RevitAddInModularTemplate.Res;
 //
 // To add icons:
 //   1. Create folder: Images/Icons/
-//   2. Add .ico files (16x16 and 32x32)
+//   2. Add .ico files 16x16[96dpi] and 32x32[192dpi]
+//   helpful video: https://youtu.be/q__JuQDTH_k
 //   3. Set Build Action to "Embedded Resource"
 //   4. Reference by filename in RevitPushButtonDataModel
 //

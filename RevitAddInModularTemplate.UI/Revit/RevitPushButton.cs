@@ -24,9 +24,9 @@ public class RevitPushButton
             RevitAddInModularTemplate.Core.CoreAssembly.GetCoreAssemblyLocation(),
             data.CommandNamespacePath)
         {
-            Image = RevitAddInModularTemplate.Res.ResourceImage.GetIcon(data.IconImageName),
-            LargeImage = RevitAddInModularTemplate.Res.ResourceImage.GetIcon(data.IconLargeImageName),
-            ToolTipImage = RevitAddInModularTemplate.Res.ResourceImage.GetIcon(data.IconLargeImageName),
+            Image = RevitAddInModularTemplate.Res.ResourceImage.GetImage(data.IconImageName),
+            LargeImage = RevitAddInModularTemplate.Res.ResourceImage.GetImage(data.IconLargeImageName),
+            ToolTipImage = RevitAddInModularTemplate.Res.ResourceImage.GetImage(data.IconLargeImageName),
             ToolTip = data.Tooltip,
             LongDescription = data.LongDescription,
         };

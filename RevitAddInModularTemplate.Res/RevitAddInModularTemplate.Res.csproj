@@ -8,6 +8,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ImageResources\Cube-Red-16-Dark.tiff" />
+    <None Remove="ImageResources\Cube-Red-32-Dark.tiff" />
+    <None Remove="ImageResources\hello-16-dark.tiff" />
+    <None Remove="ImageResources\hello-16-light.tiff" />
+    <None Remove="ImageResources\hello-16.tiff" />
+    <None Remove="ImageResources\hello-32-dark.tiff" />
+    <None Remove="ImageResources\hello-32-light.tiff" />
+    <None Remove="ImageResources\hello-32.tiff" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ImageResources\hello-16-dark.tiff" />
+    <EmbeddedResource Include="ImageResources\hello-16-light.tiff" />
+    <EmbeddedResource Include="ImageResources\hello-32-dark.tiff" />
+    <EmbeddedResource Include="ImageResources\hello-32-light.tiff" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="RevitAPI">
       <HintPath>..\lib\revit2026\RevitAPI.dll</HintPath>
     </Reference>

@@ -41,8 +41,8 @@ public class RevitSplitButton
             RevitAddInModularTemplate.Core.CoreAssembly.GetCoreAssemblyLocation(),
             data.CommandNamespacePath)
         {
-            LargeImage = RevitAddInModularTemplate.Res.ResourceImage.GetIcon(data.IconImageName),
-            ToolTipImage = RevitAddInModularTemplate.Res.ResourceImage.GetIcon(data.IconImageName)
+            LargeImage = RevitAddInModularTemplate.Res.ResourceImage.GetImage(data.IconImageName),
+            ToolTipImage = RevitAddInModularTemplate.Res.ResourceImage.GetImage(data.IconImageName)
         };
 
         _splitButton.AddPushButton(btnData);
