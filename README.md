@@ -152,16 +152,48 @@ lib/                      # Revit API reference DLLs
 - **Single Revit version** - Template targets Revit 2026 by default. Future improvement for letting the user choose the revit version
 - **No unit test project** - Add your own test project if needed (reference the .Core project)
 
+## Features
+
+### Automatic Theme Switching
+
+The template includes a **fully implemented automatic theme switching system** that responds to Revit's light/dark theme changes:
+
+- **Automatic icon updates** - Ribbon icons instantly update when switching between light/dark themes
+- **No user intervention** - Theme changes are detected and handled automatically
+- **Simple API** - Easy-to-use ThemeManager for loading themed images
+- **Example implementation** - Working example included with Hello World button
+
+**Image Naming Convention:**
+```
+{iconname}-{size}-{theme}.tiff
+Example: hello-16-dark.tiff, hello-32-light.tiff
+```
+
+**Usage:**
+```csharp
+// Load themed icons automatically
+Image = ThemeManager.GetSmallIcon("hello"),
+LargeImage = ThemeManager.GetLargeIcon("hello"),
+
+// Register for automatic updates
+ribbonImageThemeSelector.RegisterButton(button, "hello");
+```
+
+For detailed theming documentation, see [THEMING.md](THEMING.md)
+
 ## Roadmap
+
+Completed features:
+- [x] **PushButton** - Standard push button with icon
+- [x] **Button images** - 16x16 and 32x32 icon setup with theme support
+- [x] **Automatic theme switching** - Light/dark theme detection and icon updates
 
 Upcoming features planned for this template:
 
-- [ ] **PushButton** - Standard push button with icon
-- [ ] **SplitButton** - Dropdown button with multiple commands
-- [ ] **PulldownButton** - Menu-style button groups
-- [ ] **ToggleButton** - On/off state buttons
-- [ ] **Button images** - 16x16 and 32x32 icon setup
-- [ ] **Tooltip images** - Extended tooltips with GIF previews
+- [ ] **SplitButton theme support** - Theme switching for dropdown buttons
+- [ ] **PulldownButton** - Menu-style button groups with theme support
+- [ ] **ToggleButton** - On/off state buttons with theme support
+- [ ] **Tooltip images** - Extended tooltips with themed GIF previews
 - [ ] **Help videos** - F1 help linking to video tutorials
 - [ ] **Multi-version support** - Target multiple Revit versions from single codebase
 

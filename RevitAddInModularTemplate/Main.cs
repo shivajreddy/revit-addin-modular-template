@@ -1,6 +1,7 @@
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Events;
 using RevitAddInModularTemplate.Core.Commands;
+using RevitAddInModularTemplate.UI.Revit;
 using System.Diagnostics;
 
 namespace RevitAddInModularTemplate;
@@ -30,12 +31,13 @@ public class Main : IExternalApplication
     /// </summary>
     public Result OnStartup(UIControlledApplication revitApplication)
     {
-        //InitAddIn.InitializeAddInUI(revitApplication);
-        // TODO: handle theme change logic
-        //revitApplication.ThemeChanged += OnThemeChange;
         ribbonImageThemeSelector = new RibbonImageThemeSelector(revitApplication);
-        ribbonPanel = revitApplication.CreateRibbonPanel("example");
 
+        const string tabName = "RAT-V1.0.0";
+        revitApplication.CreateRibbonTab(tabName);
+        ribbonPanel = revitApplication.CreateRibbonPanel(tabName, "Commands");
+
+        // Create Hello World button with theme-aware images
         var helloButtonData = new PushButtonData(
             "HelloWorldButton",
             "Hello\nWorld",
@@ -43,76 +45,95 @@ public class Main : IExternalApplication
             HelloWorld.GetPath()
         )
         {
-            // 16x16 96dpi
-            // 32x32 192dpi
-            //Image = RevitAddInModularTemplate.Res.ResourceImage.GetImage("Cube-Red-16-Dark.tiff"),
-            //LargeImage = RevitAddInModularTemplate.Res.ResourceImage.GetImage("Cube-Red-16-Dark.tiff"),
-            Image = RevitAddInModularTemplate.Res.ResourceImage.GetImage("hello-16-dark.tiff"),
-            LargeImage = RevitAddInModularTemplate.Res.ResourceImage.GetImage("hello-32-dark.tiff"),
-            ToolTipImage = RevitAddInModularTemplate.Res.ResourceImage.GetImage("hello-32-dark.tiff"),
+            // Use ThemeManager to get images for current theme
+            Image = Res.ThemeManager.GetSmallIcon("hello"),
+            LargeImage = Res.ThemeManager.GetLargeIcon("hello"),
+            ToolTipImage = Res.ThemeManager.GetLargeIcon("hello"),
             ToolTip = "Shows a Hello World message"
         };
-        ribbonPanel.AddItem(helloButtonData);
-        var x = ribbonPanel.GetItems();
-        //ribbonImageThemeSelector.ribbonItems.Add(ribbonPanel.GetItems());
-        ribbonImageThemeSelector.AddRibbonItemms(ribbonPanel.GetItems());
+        var helloButton = ribbonPanel.AddItem(helloButtonData) as PushButton;
+
+        // Register button for theme updates
+        ribbonImageThemeSelector.RegisterButton(helloButton, "hello");
 
         return Result.Succeeded;
     }
-
-
 
     /// <summary>
     /// Called when Revit shuts down. Use for cleanup and resource disposal.
     /// </summary>
     public Result OnShutdown(UIControlledApplication application)
     {
-        //ribbonPanel.Remove();
-        ribbonImageThemeSelector.Dispose();
+        ribbonImageThemeSelector?.Dispose();
         return Result.Succeeded;
     }
 }
 
-public class RibbonImageThemeSelector :IDisposable
+/// <summary>
+/// Manages automatic theme switching for ribbon buttons.
+/// Subscribes to Revit's ThemeChanged event and updates button images accordingly.
+/// </summary>
+public class RibbonImageThemeSelector : IDisposable
 {
     private readonly UIControlledApplication revitApplication;
-    public List<RibbonItem> ribbonItems = new List<RibbonItem>();
+    private readonly List<ButtonMetadata> buttonMetadataList = new List<ButtonMetadata>();
+
     public RibbonImageThemeSelector(UIControlledApplication application)
     {
         this.revitApplication = application;
         this.revitApplication.ThemeChanged += OnThemeChange;
     }
-    internal void AddRibbonItemms(IList<RibbonItem> ribbonItems)
+
+    /// <summary>
+    /// Registers a button for automatic theme updates.
+    /// </summary>
+    /// <param name="button">The ribbon button to track</param>
+    /// <param name="iconBaseName">Base name of the icon (e.g., "hello")</param>
+    public void RegisterButton(RibbonItem button, string iconBaseName)
     {
-        foreach(var item in ribbonItems)
-        {
-            AddRibbonItem(item);
-        }
-        //throw new NotImplementedException();
+        buttonMetadataList.Add(new ButtonMetadata(button, iconBaseName));
     }
-    public void AddRibbonItem(RibbonItem item)
+
+    private void OnThemeChange(object sender, ThemeChangedEventArgs args)
     {
-        ribbonItems.Add(item);
-    }
-    public void OnThemeChange(object sender, ThemeChangedEventArgs args)
-    {
-        Debug.WriteLine("THEME CHANGED, toggle buttons");
+        Debug.WriteLine($"Theme changed to: {args.ThemeChangedType}");
+        
+        // Update theme manager with new theme
+        Res.ThemeManager.UpdateTheme(args);
+        
+        // Update all button images
         UpdateImages();
     }
-    public void UpdateImages()
+
+    /// <summary>
+    /// Updates all registered button images to match the current theme.
+    /// </summary>
+    private void UpdateImages()
     {
-        foreach (var ribbonItem  in ribbonItems)
+        foreach (var metadata in buttonMetadataList)
         {
-            Debug.WriteLine("Going to change image for:", ribbonItem.Name);
-        //InitAddIn.helloButtonData.Image = RevitAddInModularTemplate.Res.ResourceImage.GetImage("hello-16-light.tiff");
-        //InitAddIn.helloButtonData.LargeImage = RevitAddInModularTemplate.Res.ResourceImage.GetImage("hello-32-light.tiff");
+            try
+            {
+                if (metadata.Item is PushButton pushButton)
+                {
+                    pushButton.Image = Res.ThemeManager.GetSmallIcon(metadata.IconBaseName);
+                    pushButton.LargeImage = Res.ThemeManager.GetLargeIcon(metadata.IconBaseName);
+                    pushButton.ToolTipImage = Res.ThemeManager.GetLargeIcon(metadata.IconBaseName);
+                    
+                    Debug.WriteLine($"Updated images for button: {pushButton.Name} (theme: {Res.ThemeManager.CurrentTheme})");
+                }
+                // Future: Add support for SplitButton, PulldownButton, etc.
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error updating images for {metadata.Item.Name}: {ex.Message}");
+            }
         }
     }
 
     public void Dispose()
     {
-        //this.revitApplication.
-        throw new NotImplementedException();
+        this.revitApplication.ThemeChanged -= OnThemeChange;
+        buttonMetadataList.Clear();
     }
-
 }

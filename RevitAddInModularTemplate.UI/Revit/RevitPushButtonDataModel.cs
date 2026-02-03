@@ -36,10 +36,18 @@ public class RevitPushButtonDataModel
     public string TooltipImageName { get; set; }
 
     /// <summary>Small icon filename (16x16) in Res/Images/Icons/.</summary>
+    [Obsolete("Use IconBaseName instead for automatic theme support")]
     public string IconImageName { get; set; }
 
     /// <summary>Large icon filename (32x32) in Res/Images/Icons/.</summary>
+    [Obsolete("Use IconBaseName instead for automatic theme support")]
     public string IconLargeImageName { get; set; }
+
+    /// <summary>
+    /// Base name for themed icons (without size or theme suffix).
+    /// Example: "hello" will load "hello-16-dark.tiff", "hello-32-light.tiff", etc.
+    /// </summary>
+    public string IconBaseName { get; set; }
 
     public RevitPushButtonDataModel() { }
 }
